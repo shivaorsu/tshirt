@@ -8,14 +8,16 @@ function TshirtOptions() {
   const [neckSize, setNeckSize] = useState(defaultNeckSize);
   const [selectedOption, setSelectedOption] = useState('');
 
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+  };
+
   const handleShoulderSizeChange = (event) => {
     setShoulderSize(event.target.value);
-    setSelectedOption('shoulder'); // Automatically select shoulder when size is changed
   };
 
   const handleNeckSizeChange = (event) => {
     setNeckSize(event.target.value);
-    setSelectedOption('neck'); // Automatically select neck when size is changed
   };
 
   return (
@@ -29,33 +31,52 @@ function TshirtOptions() {
       <div className="options">
         <h3 style={{color:"#000035"}}>Know T-shirt Sizes</h3>
         <ul>
-          <li style={{marginTop:"-24rem", marginLeft:"130px"}}>
-            {selectedOption === 'neck' ? ` ${neckSize || defaultNeckSize}cm` : '40cm'}
+          <li onClick={() => handleOptionClick('neck')} style={{ marginTop: "-24rem", marginLeft: "130px" }}>
+            Neck
           </li>
-          <li style={{marginTop:"51px", marginLeft:"243px"}}>
-            {selectedOption === 'shoulder' ? ` ${shoulderSize || defaultShoulderSize}cm` : '30cm'}
+          <li onClick={() => handleOptionClick('shoulder')} style={{ marginTop: "51px", marginLeft: "243px" }}>
+            Hand
           </li>
         </ul>
       </div>
 
-      <div className="size-form">
-        <form>
-          <h3>Write your size to update the T-shirt size</h3>
-          <div>
-            <label>
-              Neck Size:
-              <input type="text" value={neckSize} onChange={handleNeckSizeChange} />
-            </label>
-          </div>
-          <div>
-            <label>
-              Hand Size:
-              <input type="text" value={shoulderSize} onChange={handleShoulderSizeChange} />
-            </label>
-          </div>
-         
-        </form>
-      </div>
+      {selectedOption && (
+        <div className="size-form">
+          <form>
+            <h3> T-shirt size</h3>
+            {selectedOption === 'neck' && (
+              <div>
+                <label>
+                
+                  <input type="text" name="neck" value="Neck" readOnly />
+                </label>
+                <div>
+                  <label>
+                    Neck Size:
+                    <input type="text" value={neckSize} onChange={handleNeckSizeChange} />
+                    <input type="text" value={neckSize} onChange={handleNeckSizeChange} />
+                  </label>
+                </div>
+              </div>
+            )}
+            {selectedOption === 'shoulder' && (
+              <div>
+                <label>
+                 
+                  <input type="text" name="shoulder" value="Hand" readOnly />
+                </label>
+                <div>
+                  <label>
+                    Hand Size:
+                    <input type="text" value={shoulderSize} onChange={handleShoulderSizeChange} />
+                    <input type="text" value={shoulderSize} onChange={handleShoulderSizeChange} />
+                  </label>
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
+      )}
     </div>
   );
 }
