@@ -2,44 +2,32 @@ import React, { useState, useEffect } from 'react';
 import './TshirtOptions.css'; // Import CSS file for styling
 
 const TshirtOptions = () => {
-  const defaultShoulderSize = '30'; // Default shoulder size is set to 30cm
-  const defaultNeckSize = '40'; // Default neck size is set to 40cm
-  const [shoulderSize, setShoulderSize] = useState(defaultShoulderSize);
-  const [neckSize, setNeckSize] = useState(defaultNeckSize);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [coordX, setCoordX] = useState('');
-  const [coordY, setCoordY] = useState('');
+  const [forms, setForms] = useState([{ inputValue: '', coordX: '', coordY: '' }]);
   const [formCount, setFormCount] = useState(1);
+  const [currentCoords, setCurrentCoords] = useState('');
 
   useEffect(() => {
     // Set a default option when the component mounts
-    setSelectedOption('neck'); // You can set this to 'shoulder' if you want "Hand" to be the default
+    setForms([{ inputValue: '', coordX: '', coordY: '' }]);
   }, []);
 
-  const handleShoulderSizeChange = (event) => {
-    setShoulderSize(event.target.value);
-  };
-
-  const handleNeckSizeChange = (event) => {
-    setNeckSize(event.target.value);
-  };
-
-  const handleInputValueChange = (event) => {
-    const inputValue = event.target.value.toLowerCase();
-    setSelectedOption(inputValue);
-    if (inputValue === 'neck') {
-      setCoordX('X: 50');
-      setCoordY('Y: 100');
-    } else if (inputValue === 'hand') {
-      setCoordX('X: 75');
-      setCoordY('Y: 75');
+  const handleInputValueChange = (index, event) => {
+    const { value } = event.target;
+    const updatedForms = [...forms];
+    updatedForms[index].inputValue = value.toLowerCase();
+    if (value.toLowerCase() === 'neck') {
+      updatedForms[index].coordX = 'X: '; // Clear the X coordinate
+      updatedForms[index].coordY = 'Y: '; // Clear the Y coordinate
+    } else if (value.toLowerCase() === 'hand') {
+      updatedForms[index].coordX = 'X: '; // Clear the X coordinate
+      updatedForms[index].coordY = 'Y: '; // Clear the Y coordinate
     } else {
-      setCoordX('');
-      setCoordY('');
+      // If neither 'neck' nor 'hand' is selected, clear the coordinates
+      updatedForms[index].coordX = '';
+      updatedForms[index].coordY = '';
     }
+    setForms(updatedForms);
   };
-
-  const [currentCoords, setCurrentCoords] = useState('');
 
   const handleMouseMove = (event) => {
     const currentX = Math.round(event.pageX - event.target.offsetLeft);
@@ -53,15 +41,17 @@ const TshirtOptions = () => {
 
   const handleAddForm = () => {
     setFormCount(formCount + 1);
+    setForms([...forms, { inputValue: '', coordX: '', coordY: '' }]);
   };
 
   const handleDeleteForm = () => {
     if (formCount > 1) {
       setFormCount(formCount - 1);
+      setForms(forms.slice(0, -1));
     }
   };
 
-  const [xCoord, yCoord] = currentCoords.split(', '); 
+  const [xCoord, yCoord] = currentCoords.split(', ');
 
   return (
     <div className="card">
@@ -76,18 +66,18 @@ const TshirtOptions = () => {
       <div className="size-form">
         <form>
           <h3>T-shirt size</h3>
-          {[...Array(formCount)].map((_, index) => (
+          {forms.map((form, index) => (
             <div key={index}>
               <label>
                 Enter 'Neck' or 'Hand':
-                <input type="text" onChange={handleInputValueChange} />
+                <input type="text" value={form.inputValue} onChange={(e) => handleInputValueChange(index, e)} />
               </label>
-              {coordX && coordY && (
+              {form.coordX && form.coordY && (
                 <div>
                   <label>
                     Coordinates:
-                    <input type="text" value={coordX} readOnly />
-                    <input type="text" value={coordY} readOnly />
+                    <input type="text" value={form.coordX} onChange={(e) => setForms(forms.map((f, i) => (i === index ? { ...f, coordX: e.target.value } : f)))} />
+                    <input type="text" value={form.coordY} onChange={(e) => setForms(forms.map((f, i) => (i === index ? { ...f, coordY: e.target.value } : f)))} />
                   </label>
                 </div>
               )}
@@ -98,27 +88,29 @@ const TshirtOptions = () => {
         </form>
       </div>
       <div className="card-body">
-        {['neck', 'hand'].includes(selectedOption.toLowerCase()) && (
-          <div className="coordinates">
-            <h3>Coordinates</h3>
-            <label htmlFor="image_coords_x">X:</label>
-            <input
-              type="text"
-              id="image_coords_x"
-              value={xCoord || '\u00A0'} // Displaying X coordinate
-              readOnly
-            />
-            <br />
-            <label htmlFor="image_coords_y">Y:</label>
-            <input
-              type="text"
-              id="image_coords_y"
-              name='Y'
-              value={yCoord || '\u00A0'} // Displaying Y coordinate
-              readOnly
-            />
-          </div>
-        )}
+        {forms.map((form, index) => (
+          ['neck', 'hand'].includes(form.inputValue.toLowerCase()) && (
+            <div key={index} className="coordinates">
+              <h3>Coordinates</h3>
+              <label htmlFor={`image_coords_x_${index}`}>X:</label>
+              <input
+                type="text"
+                id={`image_coords_x_${index}`}
+                value={xCoord || '\u00A0'} // Displaying X coordinate
+                readOnly
+              />
+              <br />
+              <label htmlFor={`image_coords_y_${index}`}>Y:</label>
+              <input
+                type="text"
+                id={`image_coords_y_${index}`}
+                name={`Y_${index}`}
+                value={yCoord || '\u00A0'} // Displaying Y coordinate
+                readOnly
+              />
+            </div>
+          )
+        ))}
       </div>
     </div>
   );
