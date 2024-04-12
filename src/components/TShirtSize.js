@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TshirtOptions.css'; // Import CSS file for styling
 
 function TshirtOptions() {
@@ -7,10 +7,13 @@ function TshirtOptions() {
   const [shoulderSize, setShoulderSize] = useState(defaultShoulderSize);
   const [neckSize, setNeckSize] = useState(defaultNeckSize);
   const [selectedOption, setSelectedOption] = useState('');
+  const [coordX, setCoordX] = useState('');
+  const [coordY, setCoordY] = useState('');
 
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-  };
+  useEffect(() => {
+    // Set a default option when the component mounts
+    setSelectedOption('neck'); // You can set this to 'shoulder' if you want "Hand" to be the default
+  }, []);
 
   const handleShoulderSizeChange = (event) => {
     setShoulderSize(event.target.value);
@@ -18,6 +21,20 @@ function TshirtOptions() {
 
   const handleNeckSizeChange = (event) => {
     setNeckSize(event.target.value);
+  };
+
+  const handleInputValueChange = (event) => {
+    const inputValue = event.target.value.toLowerCase();
+    if (inputValue === 'neck') {
+      setCoordX('X: 50');
+      setCoordY('Y: 100');
+    } else if (inputValue === 'hand') {
+      setCoordX('X: 75');
+      setCoordY('Y: 75');
+    } else {
+      setCoordX('');
+      setCoordY('');
+    }
   };
 
   return (
@@ -28,55 +45,27 @@ function TshirtOptions() {
         alt="T-shirt"
         className="tshirt-image"
       />
-      <div className="options">
-        <h3 style={{color:"#000035"}}>Know T-shirt Sizes</h3>
-        <ul>
-          <li onClick={() => handleOptionClick('neck')} style={{ marginTop: "-24rem", marginLeft: "130px" }}>
-            Neck
-          </li>
-          <li onClick={() => handleOptionClick('shoulder')} style={{ marginTop: "51px", marginLeft: "243px" }}>
-            Hand
-          </li>
-        </ul>
+      <div className="size-form">
+        <form>
+          <h3>T-shirt size</h3>
+         
+          <div>
+            <label>
+              Enter 'Neck' or 'Hand':
+              <input type="text" onChange={handleInputValueChange} />
+            </label>
+          </div>
+          {coordX && coordY && (
+            <div>
+              <label>
+                Coordinates:
+                <input type="text" value={coordX} readOnly />
+                <input type="text" value={coordY} readOnly />
+              </label>
+            </div>
+          )}
+        </form>
       </div>
-
-      {selectedOption && (
-        <div className="size-form">
-          <form>
-            <h3> T-shirt size</h3>
-            {selectedOption === 'neck' && (
-              <div>
-                <label>
-                
-                  <input type="text" name="neck" value="Neck" readOnly />
-                </label>
-                <div>
-                  <label>
-                    Neck Size:
-                    <input type="text" value={neckSize} onChange={handleNeckSizeChange} />
-                    <input type="text" value={neckSize} onChange={handleNeckSizeChange} />
-                  </label>
-                </div>
-              </div>
-            )}
-            {selectedOption === 'shoulder' && (
-              <div>
-                <label>
-                 
-                  <input type="text" name="shoulder" value="Hand" readOnly />
-                </label>
-                <div>
-                  <label>
-                    Hand Size:
-                    <input type="text" value={shoulderSize} onChange={handleShoulderSizeChange} />
-                    <input type="text" value={shoulderSize} onChange={handleShoulderSizeChange} />
-                  </label>
-                </div>
-              </div>
-            )}
-          </form>
-        </div>
-      )}
     </div>
   );
 }
