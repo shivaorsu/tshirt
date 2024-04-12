@@ -14,27 +14,38 @@ const ImageWithCoords = () => {
     setCurrentCoords('');
   };
 
-  const handleClick = () => {
-    if (currentCoords) {
-      document.getElementById('image_coords_click').innerHTML = `Last click: ${currentCoords}.`;
-    }
-  };
+  const [xCoord, yCoord] = currentCoords.split(', '); // Splitting the currentCoords string into X and Y components
 
   return (
     <div className="card">
       <div className="card-body">
-        <span id="image_coords_click"></span>
-        <span id="image_coords_now">{currentCoords ? `Current: ${currentCoords}.` : '\u00A0'}</span>
-
         <img
           id="image"
-          src="https://inkplant.com/images/inkplant/code/penguin.jpg"
+          src="https://i.pinimg.com/originals/2f/bb/66/2fbb6650a2b6b07aee93909b1f248e24.png"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
           alt="Penguin"
           className="card-img-top"
         />
+        <div className="coordinates">
+            <h3>Coordinates</h3>
+          <label htmlFor="image_coords_x">X:</label>
+          <input
+            type="text"
+            id="image_coords_x"
+            value={xCoord || '\u00A0'} // Displaying X coordinate
+            readOnly
+          />
+          <br/>
+          <label htmlFor="image_coords_y">Y:</label>
+          <input
+            type="text"
+            id="image_coords_y"
+            name='Y'
+            value={yCoord || '\u00A0'} // Displaying Y coordinate
+            readOnly
+          />
+        </div>
       </div>
     </div>
   );
