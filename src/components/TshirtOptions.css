@@ -1,0 +1,76 @@
+.card {
+    width: 300px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    background-color: #000035; /* Adjusted background color */
+    color: #fff; /* Text color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tshirt-image {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.options {
+    margin-bottom: 20px;
+}
+
+.options ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.options li {
+    cursor: pointer;
+    margin-bottom: 5px;
+    color: #007bff;
+}
+
+.options li:hover {
+    text-decoration: underline;
+}
+
+.selected-option {
+    margin-bottom: 20px;
+}
+
+.size-form h3 {
+    margin-bottom: 10px;
+}
+
+.size-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.size-form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #fff; /* Input field background color */
+    color: #000; /* Input field text color */
+}
+
+.size-form input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.size-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.size-form button:hover {
+    background-color: #0056b3;
+}
